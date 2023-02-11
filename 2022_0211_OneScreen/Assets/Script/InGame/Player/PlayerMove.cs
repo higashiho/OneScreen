@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace player
+namespace Player
 {
     /// <summary>
     /// プレイヤー挙動関数管理クラス

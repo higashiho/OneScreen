@@ -17,6 +17,7 @@ namespace GameManager
         void Update()
         {
             gameUpdate();
+
         }
     }
 }

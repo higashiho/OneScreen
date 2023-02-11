@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using player;
+using Player;
+using Enemy;
 
 namespace GameManager
 {
@@ -10,7 +11,10 @@ namespace GameManager
     {
         // インスタンス化
         public static BasePlayer Player;
+        public static List<BaseEnemy> Enemys = new List<BaseEnemy>(10);
 
+        
+        public float tmpDis;
 
         // ゲーム挙動ステート
         public enum GameState
@@ -35,6 +39,9 @@ namespace GameManager
             GameStatus = GameState.MOVE_GAME;
         }
 
+        /// <summary>
+        /// ゲーム更新関数
+        /// </summary>
         protected void gameUpdate()
         {
             switch(GameStatus)
