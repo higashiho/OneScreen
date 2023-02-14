@@ -18,24 +18,24 @@ namespace Player
         {
             Initialization();
         }
-        // ステージアドレスのハンドル
+        // プレイヤーのハンドル
         public AsyncOperationHandle Handle{get;private set;}
 
         // player
         public GameObject PlayerObj{get;private set;} = null;
 
         // インスタンス化
-        public PlayerMove Move;
+        private PlayerMove move;
 
         // 当たり判定
         public ColComponent PlayerCol{get;private set;}
 
         /// <summary>
-        /// 初期化処理
+        /// プレイヤー初期化処理
         /// </summary>
         public async void Initialization()
         {
-            Move = new PlayerMove(this);
+            move = new PlayerMove(this);
             // 取得し完了するまで待つ
             Handle = Addressables.LoadAssetAsync<GameObject>("Player");
             await Handle.Task;
@@ -50,15 +50,26 @@ namespace Player
             Addressables.Release(Handle);
         }
 
+        /// <summary>
+        /// プレイヤー更新関数
+        /// </summary>
         public void PlayerUpdate()
         {
-            Move.Movements();
+            move.Movements();
 
-            PlayerCol.CheckHit(
-                PlayerObj.transform.position, 
-                BaseGameObject.Enemys[0].transform.position, 
-                BaseGameObject.Enemys[0].EnemyCol
-                );
+            foreach(var tmp in BaseGameObject.Enemys)
+            {
+                // エネミーの生成が終わってい無かったら処理終了
+                if(tmp == null || tmp.EnemyCol == null)
+                    break;
+
+                // エネミーとの当たり判定
+                PlayerCol.CheckHit(
+                    PlayerObj.transform.position, 
+                    tmp.EnemyObj.transform.position, 
+                    tmp.EnemyCol
+                    );
+            }
         }
     }
 }

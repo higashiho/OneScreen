@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 namespace Col
 {
@@ -82,13 +81,28 @@ namespace Col
         {
             var tmpDis = new List<(float dis, string mask)>
             {
-                ((Point.y + HalScale.y) - (tmpCol.Point.y - tmpCol.HalScale.y), "ue"),
-                ((Point.x + HalScale.x) - (tmpCol.Point.x - tmpCol.HalScale.x), "migi"),
+                // 負の数が入らないように絶対値にする
+                (Mathf.Abs(Point.y - tmpCol.Point.y), "Up"),
+                (Mathf.Abs(Point.x - tmpCol.Point.x), "Right"),
+                (Mathf.Abs(Point.x + tmpCol.Point.x), "Left"),
             };
 
-            var maxElement = tmpDis.OrderByDescending(x => x.dis).FirstOrDefault();
+            // 上面座標より右と左の座標が小さい時上面判定
+            if(tmpDis[0].dis > tmpDis[1].dis && tmpDis[0].dis > tmpDis[2].dis)
+                return tmpDis[0].mask;
 
-            return maxElement.mask;
+            // それ以外の場合
+            else 
+            {
+                var tmpDisX = Point.x - tmpCol.Point.x;
+                // x座標の差が負の数の場合右側判定
+                if(tmpDisX < 0)
+                    return tmpDis[1].mask;
+                // x座標の差が正の数の場合は左側判定
+                else
+                    return tmpDis[2].mask;
+            }
+
         }
         /// <summary>
         /// 下か左のどちらが一番触れているか判断関数
@@ -99,13 +113,28 @@ namespace Col
         {
             var tmpDis = new List<(float dis, string mask)>
             {
-                ((Point.y - HalScale.y) - (tmpCol.Point.y + tmpCol.HalScale.y), "sita"),
-                ((Point.x - HalScale.x) - (tmpCol.Point.x + tmpCol.HalScale.x), "hidari"),
+                // 負の数が入らないように絶対値にする
+                (Mathf.Abs(Point.y - tmpCol.Point.y), "Down"),
+                (Mathf.Abs(Point.x + tmpCol.Point.x), "Right"),
+                (Mathf.Abs(Point.x - tmpCol.Point.x), "Left"),
             };
 
-            var maxElement = tmpDis.OrderBy(x => x.dis).FirstOrDefault();
+            // 下面座標より右と左の座標が小さい時下面判定
+            if(tmpDis[0].dis > tmpDis[1].dis && tmpDis[0].dis > tmpDis[2].dis)
+                return tmpDis[0].mask;
 
-            return maxElement.mask;
+            // それ以外の場合
+            else 
+            {
+                var tmpDisX = Point.x - tmpCol.Point.x;
+                // x座標の差が負の数の場合右側判定
+                if(tmpDisX < 0)
+                    return tmpDis[1].mask;
+                // x座標の差が正の数の場合は左側判定
+                else
+                    return tmpDis[2].mask;
+            }
+            
         }
     }
 }
