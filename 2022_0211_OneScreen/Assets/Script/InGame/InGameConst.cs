@@ -18,7 +18,7 @@ public class InGameConst : MonoBehaviour
     /// <summary>
     /// エネミー生成速度
     /// </summary>
-    public const int ENEMY_SPONE_SPEED = 10;
+    public const int ENEMY_SPONE_SPEED = 2;
     /// <summary>
     /// エネミー生成初期ｙ座標
     /// </summary>

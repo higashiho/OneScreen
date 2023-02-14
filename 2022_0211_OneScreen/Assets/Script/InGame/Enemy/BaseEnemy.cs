@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Col;
+using GameManager;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
@@ -28,6 +29,13 @@ namespace Enemy
 
         // エネミーのデータ
         public EnemyData EnemysData{get; private set;} = null;
+
+        // 挙動出来るか
+        public List<(bool moveFlag, string moveName)> MoveStop = new List<(bool moveFlag, string moveName)>
+        {
+            (false, "Down"),
+            (false, "Side"),
+        };
 
         /// <summary>
         /// 初期化処理
@@ -74,9 +82,45 @@ namespace Enemy
         /// </summary>
         public void EnemyUpdate()
         {
-            if(EnemyCol != null)
+            // 当たり判定が生成されていて挙動ストップフラグがたっていないとき
+            if(EnemyCol != null && !MoveStop[0].moveFlag)
             {
                 move.Movements();
+
+                // 当たり判定
+                foreach(var tmp in BaseGameObject.Enemys)
+                {
+                    // オブジェクトにnullが入ってしまった場合抜ける
+                    if(tmp == null)
+                        break;
+                    
+                    // オブジェクトが地震と同じ場合処理を飛ばす
+                    if(tmp.EnemyObj == this.EnemyObj || tmp.EnemyCol == null)
+                        continue;
+                    
+                    var tmpCol = EnemyCol.CheckHit(
+                    EnemyObj.transform.position, 
+                    tmp.EnemyObj.transform.position, 
+                    tmp.EnemyCol);
+                    Debug.Log(tmpCol);
+                    // 自分以外のエネミーとの当たり判定
+                    switch(tmpCol)
+                    {
+                        case "Up":
+                            break;
+                        case "Down":
+                            MoveStop[0] = (true, "Down");
+                            break;
+                        case "Right":
+                            MoveStop[1] = (true, "Side");
+                            break;
+                        case "Left":
+                            MoveStop[1] = (true, "Side");
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         }
     }

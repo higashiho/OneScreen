@@ -32,7 +32,7 @@ namespace Col
         /// <param name="tmpColPos">当たり判定判断される側のpos</param>
         /// <param name="col">当たり判定Component</param>
         /// <returns></returns>
-        public bool CheckHit(Vector3 tmpPos, Vector3 tmpColPos, ColComponent col)
+        public string CheckHit(Vector3 tmpPos, Vector3 tmpColPos, ColComponent col)
         {
             // 座標更新 + 当たり判定の範囲追加
             Point = tmpPos; col.Point = tmpColPos;
@@ -47,10 +47,8 @@ namespace Col
                     (Point.x - HalScale.x) - (col.Point.x + col.HalScale.x) <= 0 && 
                     col.Point.x - Point.x <= 0)
                 {
-                    // 上と右どちらが一番触れているか
-                    Debug.Log(upRightDistance(Point, col));
-
-                    return true;
+                    // どの面が触れているかを返す
+                    return upRightDistance(Point, col);
                 }
                 
             }
@@ -64,12 +62,11 @@ namespace Col
                     (Point.x - HalScale.x) - (col.Point.x + col.HalScale.x) <= 0 && 
                     col.Point.x - Point.x <= 0)
                 {   
-                    // 左としたどちらが一番触れているか
-                    Debug.Log(downLeftDistance(Point, col));
-                    return true;
+                    // どの面が触れているかを返す
+                    return downLeftDistance(Point, col);
                 }
             }
-            return false;
+            return "NoCol";
         }
 
         /// <summary>
@@ -84,7 +81,7 @@ namespace Col
                 // 負の数が入らないように絶対値にする
                 (Mathf.Abs(Point.y - tmpCol.Point.y), "Up"),
                 (Mathf.Abs(Point.x - tmpCol.Point.x), "Right"),
-                (Mathf.Abs(Point.x + tmpCol.Point.x), "Left"),
+                (Mathf.Abs(Point.x - tmpCol.Point.x), "Left"),
             };
 
             // 上面座標より右と左の座標が小さい時上面判定
@@ -114,8 +111,8 @@ namespace Col
             var tmpDis = new List<(float dis, string mask)>
             {
                 // 負の数が入らないように絶対値にする
-                (Mathf.Abs(Point.y - tmpCol.Point.y), "Down"),
-                (Mathf.Abs(Point.x + tmpCol.Point.x), "Right"),
+                (Mathf.Abs(tmpCol.Point.y - Point.y), "Down"),
+                (Mathf.Abs(Point.x - tmpCol.Point.x), "Right"),
                 (Mathf.Abs(Point.x - tmpCol.Point.x), "Left"),
             };
 
