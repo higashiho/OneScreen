@@ -12,8 +12,8 @@ public class InGameConst : MonoBehaviour
     /// <summary>
     /// 座標最小値
     /// </summary>
-    public static readonly Vector3 PLAYER_STOP_POS = new Vector3(12.5f, -9.5f, 0); 
-    public static readonly Vector3 ENEMY_STOP_POS = new Vector3(12.0f ,-9.3f, 0.0f);
+    public static readonly Vector3 PLAYER_STOP_POS = new Vector3(12.5f, -6.7f, 0); 
+    public static readonly Vector3 ENEMY_STOP_POS = new Vector3(12.0f ,-6.5f, 0.0f);
     
     // エネミー用定数
     /// <summary>
@@ -28,6 +28,12 @@ public class InGameConst : MonoBehaviour
     /// エネミーの重力scaleを割り算する用
     /// </summary>
     public const float GRAVITATION_DIVISION_ENEMY = 4;
+
+    // プレイヤー用定数
+    /// <summary>
+    /// プレイヤーの座標が変わる値の変化スピード
+    /// </summary>
+    public const float PLAYER_MOVE_CHANGE_SPEED = 0.1f;
     
     // タスク用定数
     /// <summary>

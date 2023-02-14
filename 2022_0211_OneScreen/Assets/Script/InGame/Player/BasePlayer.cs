@@ -90,7 +90,7 @@ namespace Player
                         DOTween.Kill(PlayerObj.transform);
                         // めり込むのを避けるため左に動かす
                         var tmpPos = PlayerObj.transform.position;
-                        tmpPos.x -= 0.1f;
+                        tmpPos.x -= InGameConst.PLAYER_MOVE_CHANGE_SPEED;
                         PlayerObj.transform.position = tmpPos;
                         break;
                     case "Left":
@@ -98,7 +98,7 @@ namespace Player
                         DOTween.Kill(PlayerObj.transform);
                         // めり込むのを避けるため右に動かす
                         tmpPos = PlayerObj.transform.position;
-                        tmpPos.x += 0.1f;
+                        tmpPos.x += InGameConst.PLAYER_MOVE_CHANGE_SPEED;
                         PlayerObj.transform.position = tmpPos;
                         break;
                     default:
