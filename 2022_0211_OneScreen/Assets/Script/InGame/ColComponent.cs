@@ -72,8 +72,8 @@ namespace Col
         /// <summary>
         /// 上か右のどちらが一番触れているか判断関数
         /// </summary>
-        /// <param name="tmpPoint"></param>
-        /// <param name="tmpCol"></param>
+        /// <param name="tmpPoint">当たり判定判断側のpos</param>
+        /// <param name="tmpCol">当たり判定Component</param>
         private string upRightDistance(Vector3 tmpPoint, ColComponent tmpCol)
         {
             var tmpDis = new List<(float dis, string mask)>
@@ -104,8 +104,8 @@ namespace Col
         /// <summary>
         /// 下か左のどちらが一番触れているか判断関数
         /// </summary>
-        /// <param name="tmpPoint"></param>
-        /// <param name="tmpCol"></param>
+        /// <param name="tmpPoint">当たり判定判断側のpos</param>
+        /// <param name="tmpCol">当たり判定Component</param>
         private string downLeftDistance(Vector3 tmpPoint, ColComponent tmpCol)
         {
             var tmpDis = new List<(float dis, string mask)>

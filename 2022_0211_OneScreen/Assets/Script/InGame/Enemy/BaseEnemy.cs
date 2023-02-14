@@ -13,9 +13,12 @@ namespace Enemy
     /// </summary>
     public class BaseEnemy
     {
+        // 親オブジェクト格納用
+        private GameObject parent;
         // コンストラクタ
-        public BaseEnemy()
+        public BaseEnemy(GameObject tmpObj)
         {
+            parent = tmpObj;
             Initialization();
         }
         // インスタンス化
@@ -25,7 +28,7 @@ namespace Enemy
         // エネミーのハンドル
         public AsyncOperationHandle Handle{get;private set;}
         // プレイヤーオブジェクト
-        public GameObject EnemyObj;
+        public GameObject EnemyObj{get;private set;} = null;
 
         // エネミーのデータ
         public EnemyData EnemysData{get; private set;} = null;
@@ -47,6 +50,7 @@ namespace Enemy
             Handle = Addressables.LoadAssetAsync<EnemyData>("Assets/Data/EnemyData.asset");
             await Handle.Task;
             EnemysData = (EnemyData)Handle.Result;
+            Addressables.Release(Handle);
 
             // 取得し完了するまで待つ
             Handle = Addressables.LoadAssetAsync<GameObject>("Enemy");
@@ -54,11 +58,11 @@ namespace Enemy
 
             // ゲームオブジェクト型にcastし生成
             var tmpObj = (GameObject)Handle.Result;
-            EnemyObj = MonoBehaviour.Instantiate(tmpObj, Vector3.zero, Quaternion.identity);
+            EnemyObj = MonoBehaviour.Instantiate(tmpObj, Vector3.zero, Quaternion.identity, parent.transform);
             
             // 座標変更
             PosSet();
-
+            
             // ハンドル開放
             Addressables.Release(Handle);
 
@@ -73,7 +77,7 @@ namespace Enemy
         {
             // 座標変更
             var tmpPos = EnemyObj.transform.position;
-            tmpPos.x = UnityEngine.Random.Range(InGameConst.STOP_POS.x, -InGameConst.STOP_POS.x);
+            tmpPos.x = UnityEngine.Random.Range(InGameConst.ENEMY_STOP_POS.x, -InGameConst.ENEMY_STOP_POS.x);
             tmpPos.y = InGameConst.ENEMY_POS_Y;
             EnemyObj.transform.position = tmpPos;
         }
@@ -98,13 +102,12 @@ namespace Enemy
                     if(tmp.EnemyObj == this.EnemyObj || tmp.EnemyCol == null)
                         continue;
                     
-                    var tmpCol = EnemyCol.CheckHit(
+                    var tmpColName = EnemyCol.CheckHit(
                     EnemyObj.transform.position, 
                     tmp.EnemyObj.transform.position, 
                     tmp.EnemyCol);
-                    Debug.Log(tmpCol);
                     // 自分以外のエネミーとの当たり判定
-                    switch(tmpCol)
+                    switch(tmpColName)
                     {
                         case "Up":
                             break;

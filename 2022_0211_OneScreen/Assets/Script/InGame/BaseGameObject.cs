@@ -11,11 +11,17 @@ namespace GameManager
     {
         // インスタンス化
         public static BasePlayer Player;
-        public static List<BaseEnemy> Enemys = new List<BaseEnemy>(10);
+        public static List<BaseEnemy> Enemys = new List<BaseEnemy>(100);
 
         // タスク処理しているか判断用変数
         private UniTask? enemySponTask = null;
 
+        [SerializeField, Header("フレームレートカウント")]
+        private float frameCount;
+        public float FrameCount{get{return frameCount;} set{frameCount = value;}}
+
+        [SerializeField, Header("エネミーの親オブジェクト")]
+        private GameObject enemysParent;
         // ゲーム挙動ステート
         public enum GameState
         {
@@ -63,6 +69,9 @@ namespace GameManager
                         tmpEnemy = tmp;
                         // 座標変更
                         tmpEnemy.PosSet();
+                        // フラグ初期化
+                        tmpEnemy.MoveStop[0] = (false, "Down");
+                        tmpEnemy.MoveStop[1] = (false, "Side");
                         break;
                     }
                 }
@@ -71,7 +80,7 @@ namespace GameManager
             if(tmpEnemy == null)
             {
                 // 生成
-                Enemys.Add(new BaseEnemy());
+                Enemys.Add(new BaseEnemy(enemysParent));
                 
                 // エネミーリストの最後の要素のオブジェクト取得
                 tmpEnemy = Enemys[Enemys.Count - 1];

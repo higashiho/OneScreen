@@ -86,6 +86,7 @@ MonoBehaviour:
     - default
     - Player
     - Enemy
+    - Data
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: fb5566cb4900c9a4a97738eead31a848, type: 2}

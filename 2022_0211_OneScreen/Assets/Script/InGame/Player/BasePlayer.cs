@@ -5,6 +5,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.AddressableAssets;
 using Col;
 using GameManager;
+using DG.Tweening;
 
 namespace Player
 {
@@ -18,6 +19,8 @@ namespace Player
         {
             Initialization();
         }
+        // playerのデータ
+        public PlayerData PlayersData{get;private set;} = null;
         // プレイヤーのハンドル
         public AsyncOperationHandle Handle{get;private set;}
 
@@ -36,6 +39,12 @@ namespace Player
         public async void Initialization()
         {
             move = new PlayerMove(this);
+            // プレイヤーデータ取得
+            Handle = Addressables.LoadAssetAsync<PlayerData>("Assets/Data/PlayerData.asset");
+            await Handle.Task;
+            PlayersData = (PlayerData)Handle.Result;
+            Addressables.Release(Handle);
+            
             // 取得し完了するまで待つ
             Handle = Addressables.LoadAssetAsync<GameObject>("Player");
             await Handle.Task;
@@ -63,12 +72,38 @@ namespace Player
                 if(tmp == null || tmp.EnemyCol == null)
                     break;
 
-                // エネミーとの当たり判定
-                PlayerCol.CheckHit(
-                    PlayerObj.transform.position, 
-                    tmp.EnemyObj.transform.position, 
-                    tmp.EnemyCol
-                    );
+                var tmpColName = PlayerCol.CheckHit(
+                PlayerObj.transform.position, 
+                tmp.EnemyObj.transform.position, 
+                tmp.EnemyCol
+                );
+                Debug.Log(tmpColName);
+                // 自分以外のエネミーとの当たり判定
+                switch(tmpColName)
+                {
+                    case "Up":
+                        break;
+                    case "Down":
+                        break;
+                    case "Right":
+                        // 挙動を止める
+                        DOTween.Kill(PlayerObj.transform);
+                        // めり込むのを避けるため左に動かす
+                        var tmpPos = PlayerObj.transform.position;
+                        tmpPos.x -= 0.1f;
+                        PlayerObj.transform.position = tmpPos;
+                        break;
+                    case "Left":
+                        // 挙動を止める
+                        DOTween.Kill(PlayerObj.transform);
+                        // めり込むのを避けるため右に動かす
+                        tmpPos = PlayerObj.transform.position;
+                        tmpPos.x += 0.1f;
+                        PlayerObj.transform.position = tmpPos;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

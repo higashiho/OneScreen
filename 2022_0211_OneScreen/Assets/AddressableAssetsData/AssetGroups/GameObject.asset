@@ -27,6 +27,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Enemy
+  - m_GUID: 512606ee51d3b5a458df5cca075cbef3
+    m_Address: Assets/Data/EnemyData.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Data
+  - m_GUID: 7f751a51b19a5364f9fd1d08c86596d0
+    m_Address: Assets/Data/PlayerData.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Data
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: cdc241a1274189242bd9290332b555b7, type: 2}
   m_SchemaSet:

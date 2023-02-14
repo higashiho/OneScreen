@@ -62,21 +62,21 @@ namespace Enemy
         {
             
             // 画面外下についたら削除
-            if(pos.y <= (InGameConst.STOP_POS.y + enemy.EnemyCol.HalScale.y))
+            if(pos.y <= InGameConst.ENEMY_STOP_POS.y)
             {
                 // 落下を止める
                 enemy.MoveStop[0] = (true, "Down");
             }
             // 画面外右端
-            if(pos.x >= InGameConst.STOP_POS.x)
+            if(pos.x >= InGameConst.ENEMY_STOP_POS.x)
             {
-                pos.x = InGameConst.STOP_POS.x;
+                pos.x = InGameConst.ENEMY_STOP_POS.x;
                 return;
             }
             // 画面外左端
-            if(pos.x <= -InGameConst.STOP_POS.x)
+            if(pos.x <= -InGameConst.ENEMY_STOP_POS.x)
             {
-                pos.x = -InGameConst.STOP_POS.x;
+                pos.x = -InGameConst.ENEMY_STOP_POS.x;
                 return;
             }
         }

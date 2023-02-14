@@ -9,6 +9,8 @@ namespace GameManager
         // Start is called before the first frame update
         void Start()
         {
+            // フレームレート設定
+            Application.targetFrameRate = 60;
             // 初期化処理が終わるまで待つ
             startAcquisition();
         }
@@ -17,7 +19,6 @@ namespace GameManager
         void Update()
         {
             gameUpdate();
-
         }
     }
 }
