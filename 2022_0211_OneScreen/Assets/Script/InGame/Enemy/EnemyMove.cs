@@ -51,7 +51,7 @@ namespace Enemy
         private void gravity(ref Vector3 pos)
         {
             // エネミーはゆっくり落とすため重力を1/4にする
-            pos.y -= (InGameConst.GRAVITATION / InGameConst.GRAVITATION_DIVISION_ENEMY) * Time.deltaTime;
+            pos.y -= (InGameConst.GRAVITATION / InGameConst.GRAVITATION_DIVISION_ENEMY) * Time.deltaTime / 2;
         }
 
          /// <summary>

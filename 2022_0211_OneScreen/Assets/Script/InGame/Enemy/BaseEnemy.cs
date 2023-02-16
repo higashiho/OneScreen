@@ -99,15 +99,14 @@ namespace Enemy
                         break;
                     
                     // オブジェクトが地震と同じ場合処理を飛ばす
-                    if(tmp.EnemyObj == this.EnemyObj || tmp.EnemyCol == null)
+                    if(tmp.EnemyObj == this.EnemyObj || tmp.EnemyCol == null || !tmp.EnemyObj.activeSelf)
                         continue;
                     
-                    var tmpColName = EnemyCol.CheckHit(
+                    // 自分以外のエネミーとの当たり判定
+                    switch(EnemyCol.CheckHit(
                     EnemyObj.transform.position, 
                     tmp.EnemyObj.transform.position, 
-                    tmp.EnemyCol);
-                    // 自分以外のエネミーとの当たり判定
-                    switch(tmpColName)
+                    tmp.EnemyCol))
                     {
                         case "Up":
                             break;

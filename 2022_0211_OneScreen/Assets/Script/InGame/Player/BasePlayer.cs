@@ -15,8 +15,9 @@ namespace Player
     public class BasePlayer
     {
         // コンストラクタ
-        public BasePlayer()
+        public BasePlayer(BaseGameObject tmp)
         {
+            GameObjectManager = tmp;
             Initialization();
         }
         // playerのデータ
@@ -27,9 +28,22 @@ namespace Player
         // player
         public GameObject PlayerObj{get;private set;} = null;
 
+        // 挙動開始frame取得用
+        protected float? moveStartFlame = null;
+        public float? MoveStartFlame{get{return moveStartFlame;} set{moveStartFlame = value;}}
+        // 挙動ステート
+        protected uint moveState = 0;
+        public uint MoveState{get{return moveState;} set{moveState = value;}}
+        // 現在の移動スピード
+        protected float nowMoveSpeed;
+        public float NowMoveSpeed{get{return nowMoveSpeed;} set{nowMoveSpeed = value;}}
         // インスタンス化
         private PlayerMove move;
-
+        public BaseGameObject GameObjectManager{get;private set;}
+        
+        // 掘る対象エネミー
+        private GameObject digEnemy;
+        public GameObject DigEnemy{get{return digEnemy;}set{digEnemy = value;}}
         // 当たり判定
         public ColComponent PlayerCol{get;private set;}
 
@@ -69,37 +83,49 @@ namespace Player
             foreach(var tmp in BaseGameObject.Enemys)
             {
                 // エネミーの生成が終わってい無かったら処理終了
-                if(tmp == null || tmp.EnemyCol == null)
+                if(tmp == null || tmp.EnemyCol == null || !tmp.EnemyObj.activeSelf)
                     break;
 
-                var tmpColName = PlayerCol.CheckHit(
+                // 自分以外のエネミーとの当たり判定
+                switch(PlayerCol.CheckHit(
                 PlayerObj.transform.position, 
                 tmp.EnemyObj.transform.position, 
                 tmp.EnemyCol
-                );
-                Debug.Log(tmpColName);
-                // 自分以外のエネミーとの当たり判定
-                switch(tmpColName)
+                ))
                 {
                     case "Up":
+                    #if DEBUG
+                    #else
+                        GameObject.GameStatus = BaseGameObject.GameState.GAME_END;
+                    #endif
                         break;
                     case "Down":
                         break;
                     case "Right":
                         // 挙動を止める
-                        DOTween.Kill(PlayerObj.transform);
+                        MoveState &= ~InGameConst.MOVE_STATE_RIGHT_MOVE;
+                        NowMoveSpeed = 0;
+
+                        // 掘る対象を格納
+                        DigEnemy = tmp.EnemyObj;
+
                         // めり込むのを避けるため左に動かす
                         var tmpPos = PlayerObj.transform.position;
                         tmpPos.x -= InGameConst.PLAYER_MOVE_CHANGE_SPEED;
                         PlayerObj.transform.position = tmpPos;
                         break;
                     case "Left":
-                        // 挙動を止める
-                        DOTween.Kill(PlayerObj.transform);
+                        // 挙動を止める                        
+                        MoveState &= ~InGameConst.MOVE_STATE_LEFT_MOVE;
+                        NowMoveSpeed = 0;   
+
                         // めり込むのを避けるため右に動かす
                         tmpPos = PlayerObj.transform.position;
                         tmpPos.x += InGameConst.PLAYER_MOVE_CHANGE_SPEED;
-                        PlayerObj.transform.position = tmpPos;
+                        PlayerObj.transform.position = tmpPos;   
+
+                        // 掘る対象を格納
+                        DigEnemy = tmp.EnemyObj;
                         break;
                     default:
                         break;

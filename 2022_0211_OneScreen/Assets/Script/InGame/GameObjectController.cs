@@ -10,7 +10,7 @@ namespace GameManager
         void Start()
         {
             // フレームレート設定
-            Application.targetFrameRate = 60;
+            Application.targetFrameRate = InGameConst.MAX_FLAME;
             // 初期化処理が終わるまで待つ
             startAcquisition();
         }
@@ -19,6 +19,11 @@ namespace GameManager
         void Update()
         {
             gameUpdate();
+        }
+
+        void OnDestroy()
+        {
+            Cts.Cancel();
         }
     }
 }
