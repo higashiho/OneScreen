@@ -126,13 +126,16 @@ namespace Enemy
                         case "Up":
                             break;
                         case "Down":
+                            MoveStop[0] = (true, "Down");
+
+                            // まだ汚染ゲージを増やしていないとき
                             if(!WaterPollutionSliderValue)
                             {
                                 // フラグを立てる
                                 WaterPollutionSliderValue = true;
-                                MoveStop[0] = (true, "Down");
                                 // スライダーのバリューをスケール値分増やす
                                 GameObjectManager.WaterPollutionSlider.value += EnemyObj.transform.localScale.x;
+                            
                             }
                             break;
                         case "Right":

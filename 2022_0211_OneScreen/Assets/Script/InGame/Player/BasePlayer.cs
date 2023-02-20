@@ -96,13 +96,12 @@ namespace Player
             foreach(var tmp in BaseGameObject.Enemys)
             {
                 // エネミーの生成が終わってい無かったら処理終了
-                if(tmp == null || tmp.EnemyCol == null || !tmp.EnemyObj.activeSelf)
+                if(tmp == null)
                     break;
-                Debug.Log(PlayerCol.CheckHit(
-                PlayerObj.transform.position, 
-                tmp.EnemyObj.transform.position, 
-                tmp.EnemyCol
-                ));
+                    
+                if(tmp.EnemyCol == null || !tmp.EnemyObj.activeSelf)
+                    continue;
+                    
                 // 自分以外のエネミーとの当たり判定
                 switch(PlayerCol.CheckHit(
                 PlayerObj.transform.position, 
@@ -121,8 +120,15 @@ namespace Player
                     #endif
                         // Hpを減らして初期座標に戻す
                         nowHp--;
+                        Debug.Log(nowHp);
                         PlayerObj.transform.position = startPos;
                         GameObjectManager.HpHeartImage[(int)nowHp].sprite = GameObjectManager.HpHeartSprite;
+                        if(Mathf.RoundToInt(nowHp) == InGameConst.ONE_HP)
+                        {
+                            // 震わせる
+                            GameObjectManager.HpHeartImage[0].transform.DOShakePosition
+                             (InGameConst.SHAKE_NUM,InGameConst.SHAKE_POWER, fadeOut:false).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
+                        }
                         break;
                     case "Down":
                         // オブジェクトの上に乗るフラグを立てる

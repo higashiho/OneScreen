@@ -216,6 +216,7 @@ namespace Player
             
             pos.y += player.NowMoveSpeed * Time.deltaTime;
         }
+        
         /// <summary>
         /// 画面外に出ない処理関数
         /// </summary>
@@ -257,7 +258,11 @@ namespace Player
                 {
                     // オブジェクトを非表示
                     player.DigEnemy.SetActive(false);
-                    player.DigEnemy = null;
+                    player.GameObjectManager.WaterPollutionSlider.value -= player.DigEnemy.transform.localScale.x;
+                   
+                    // 初期化
+                     player.DigEnemy = null;
+                    player.MoveState &= ~InGameConst.MOVE_STATE_DIG;
                     
                     // ２秒待つ
                     await UniTask.Delay(InGameConst.GRAVITY_RETUN * InGameConst.CHANGE_SECOND, cancellationToken:player.GameObjectManager.Cts.Token);
@@ -291,8 +296,6 @@ namespace Player
                         }
                     }
 
-                    // 初期化
-                    player.MoveState &= ~InGameConst.MOVE_STATE_DIG;
                 }
             }
         }

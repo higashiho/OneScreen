@@ -62,14 +62,19 @@ namespace Enemy
         {
             
             // 画面外下についたら止める
-            if((pos.y - enemy.EnemyCol.HalScale.y) <= InGameConst.ENEMY_STOP_POS.y && !enemy.WaterPollutionSliderValue)
+            if((pos.y - enemy.EnemyCol.HalScale.y) <= InGameConst.ENEMY_STOP_POS.y)
             {
-                // フラグを立てる
-                enemy.WaterPollutionSliderValue = true;
+                // まだ汚染ゲージを増やしていないとき
+                if(!enemy.WaterPollutionSliderValue)
+                {
+                    // フラグを立てる
+                    enemy.WaterPollutionSliderValue = true;
+                    // スライダーのバリューをスケール値分増やす
+                    enemy.GameObjectManager.WaterPollutionSlider.value += enemy.EnemyObj.transform.localScale.x;
+                }
                 // 落下を止める
                 enemy.MoveStop[0] = (true, "Down");
-                // スライダーのバリューをスケール値分増やす
-                enemy.GameObjectManager.WaterPollutionSlider.value += enemy.EnemyObj.transform.localScale.x;
+                
             }
             // 画面外右端
             if(pos.x >= InGameConst.ENEMY_STOP_POS.x)

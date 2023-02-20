@@ -64,6 +64,18 @@ public class InGameConst : MonoBehaviour
     /// プレイヤーの座標が変わる値の変化スピード
     /// </summary>
     public const float PLAYER_MOVE_CHANGE_SPEED = 0.1f;
+    /// <summary>
+    /// のこりHp1の場合用定数
+    /// </summary>
+    public const int ONE_HP = 1;
+    /// <summary>
+    /// HPUIの震える強さ
+    /// </summary>
+    public const int SHAKE_POWER = 3;
+    /// <summary>
+    /// 震える回数
+    /// </summary>
+    public const int SHAKE_NUM = 1;
 
     // エネミー用定数
     /// <summary>
@@ -81,7 +93,7 @@ public class InGameConst : MonoBehaviour
     /// <summary>
     /// 地面が消されて落下を再開する時間
     /// </summary>
-    public const int GRAVITY_RETUN = 2;
+    public const int GRAVITY_RETUN = 1;
     /// <summary>
     /// エネミースケール最大値
     /// </summary>

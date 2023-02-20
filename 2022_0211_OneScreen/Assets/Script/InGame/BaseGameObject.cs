@@ -88,6 +88,7 @@ namespace GameManager
                         // フラグ初期化
                         tmpEnemy.MoveStop[0] = (false, "Down");
                         tmpEnemy.MoveStop[1] = (false, "Side");
+                        tmpEnemy.WaterPollutionSliderValue = false;
                         break;
                     }
                 }
@@ -134,6 +135,8 @@ namespace GameManager
                 case GameState.LOAD:
                     return;
                 case GameState.MOVE_GAME:
+                    if(WaterPollutionSlider.value >= WaterPollutionSlider.maxValue)
+                        GameStatus = GameState.GAME_END;
                     Player.PlayerUpdate();
                     if(enemySponTask == null)
                     {
