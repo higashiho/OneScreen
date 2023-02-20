@@ -231,10 +231,11 @@ namespace GameManager
             Player.MoveState |= InGameConst.MOVE_STATE_RESET_SWIM;
 
         }
-        // Digボタン処理関数
-        public void DigMove()
+        // Dig/Beamボタン処理関数
+        public void DigBeamMove()
         {
-            Player.MoveState |= InGameConst.MOVE_STATE_DIG;
+            if(Player.DigEnemy)
+                Player.MoveState |= InGameConst.MOVE_STATE_DIG;
         }
         // button処理関数================================================
         

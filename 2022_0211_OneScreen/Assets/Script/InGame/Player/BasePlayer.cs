@@ -98,7 +98,8 @@ namespace Player
                 // エネミーの生成が終わってい無かったら処理終了
                 if(tmp == null)
                     break;
-                    
+                
+                // 非表示のオブジェクト化当たり判定を生成されていないオブジェクトの場合処理を飛ばす
                 if(tmp.EnemyCol == null || !tmp.EnemyObj.activeSelf)
                     continue;
                     
