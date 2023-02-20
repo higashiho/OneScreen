@@ -51,7 +51,7 @@ namespace Enemy
         private void gravity(ref Vector3 pos)
         {
             // エネミーはゆっくり落とすため重力を1/4にする
-            pos.y -= (InGameConst.GRAVITATION / InGameConst.GRAVITATION_DIVISION_ENEMY) * Time.deltaTime;
+            pos.y -= (InGameConst.GRAVITATION / InGameConst.GRAVITATION_DIVISION_ENEMY) * Time.deltaTime / 2;
         }
 
          /// <summary>
@@ -61,11 +61,20 @@ namespace Enemy
         private void stopMove(ref Vector3 pos)
         {
             
-            // 画面外下についたら削除
-            if(pos.y <= InGameConst.ENEMY_STOP_POS.y)
+            // 画面外下についたら止める
+            if((pos.y - enemy.EnemyCol.HalScale.y) <= InGameConst.ENEMY_STOP_POS.y)
             {
+                // まだ汚染ゲージを増やしていないとき
+                if(!enemy.WaterPollutionSliderValue)
+                {
+                    // フラグを立てる
+                    enemy.WaterPollutionSliderValue = true;
+                    // スライダーのバリューをスケール値分増やす
+                    enemy.GameObjectManager.WaterPollutionSlider.value += enemy.EnemyObj.transform.localScale.x;
+                }
                 // 落下を止める
                 enemy.MoveStop[0] = (true, "Down");
+                
             }
             // 画面外右端
             if(pos.x >= InGameConst.ENEMY_STOP_POS.x)

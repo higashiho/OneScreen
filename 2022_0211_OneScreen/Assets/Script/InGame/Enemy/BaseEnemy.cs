@@ -16,14 +16,21 @@ namespace Enemy
         // 親オブジェクト格納用
         private GameObject parent;
         // コンストラクタ
-        public BaseEnemy(GameObject tmpObj)
+        public BaseEnemy(GameObject tmpObj, BaseGameObject tmp)
         {
+            GameObjectManager = tmp;
             parent = tmpObj;
             Initialization();
         }
         // インスタンス化
-        public ColComponent EnemyCol{get;private set;} = null;
+        private ColComponent enemyCol = null;
+        public ColComponent EnemyCol{get{return enemyCol;}set{enemyCol = value;}}
         private EnemyMove move = null;
+        public BaseGameObject GameObjectManager{get;private set;}
+
+        // 汚染ゲージのバリューを増やしたかどうか
+        private bool waterPollutionSliderValue = false;
+        public bool WaterPollutionSliderValue{get{return waterPollutionSliderValue;}set{waterPollutionSliderValue = value;}}
 
         // エネミーのハンドル
         public AsyncOperationHandle Handle{get;private set;}
@@ -65,9 +72,6 @@ namespace Enemy
             
             // ハンドル開放
             Addressables.Release(Handle);
-
-            // 当たり判定クラス作成
-            EnemyCol = new ColComponent(EnemyObj.transform.localScale);
         }
 
         /// <summary>
@@ -80,6 +84,17 @@ namespace Enemy
             tmpPos.x = UnityEngine.Random.Range(InGameConst.ENEMY_STOP_POS.x, -InGameConst.ENEMY_STOP_POS.x);
             tmpPos.y = InGameConst.ENEMY_POS_Y;
             EnemyObj.transform.position = tmpPos;
+        }
+
+        /// <summary>
+        /// スケール指定関数
+        /// </summary>
+        public void ScaleSet()
+        {
+            // スケール値ランダム設定
+            var tmpNum = UnityEngine.Random.Range(InGameConst.MIN_ENEMY_SCALE, InGameConst.MAX_ENEMY_SCALE);
+            EnemyObj.transform.localScale = new Vector3(tmpNum, tmpNum, 1);
+            
         }
         /// <summary>
         /// Enemy更新関数
@@ -99,20 +114,29 @@ namespace Enemy
                         break;
                     
                     // オブジェクトが地震と同じ場合処理を飛ばす
-                    if(tmp.EnemyObj == this.EnemyObj || tmp.EnemyCol == null)
+                    if(tmp.EnemyObj == this.EnemyObj || tmp.EnemyCol == null || !tmp.EnemyObj.activeSelf)
                         continue;
                     
-                    var tmpColName = EnemyCol.CheckHit(
+                    // 自分以外のエネミーとの当たり判定
+                    switch(EnemyCol.CheckHit(
                     EnemyObj.transform.position, 
                     tmp.EnemyObj.transform.position, 
-                    tmp.EnemyCol);
-                    // 自分以外のエネミーとの当たり判定
-                    switch(tmpColName)
+                    tmp.EnemyCol))
                     {
                         case "Up":
                             break;
                         case "Down":
                             MoveStop[0] = (true, "Down");
+
+                            // まだ汚染ゲージを増やしていないとき
+                            if(!WaterPollutionSliderValue)
+                            {
+                                // フラグを立てる
+                                WaterPollutionSliderValue = true;
+                                // スライダーのバリューをスケール値分増やす
+                                GameObjectManager.WaterPollutionSlider.value += EnemyObj.transform.localScale.x;
+                            
+                            }
                             break;
                         case "Right":
                             MoveStop[1] = (true, "Side");
