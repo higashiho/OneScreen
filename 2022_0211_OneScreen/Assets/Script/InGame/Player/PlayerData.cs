@@ -10,6 +10,9 @@ namespace Player
         [SerializeField, Header("player移動スピード最大値")]
         private float playerMoveSpeed;
         public float PlayerMoveSpeed{get{return playerMoveSpeed;}}
+        [SerializeField, Header("Hp最大値")]
+        private float maxHp;
+        public float MaxHp{get{return maxHp;}}
     }
 }
 

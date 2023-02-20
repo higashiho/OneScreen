@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   playerMoveSpeed: 10
+  maxHp: 3

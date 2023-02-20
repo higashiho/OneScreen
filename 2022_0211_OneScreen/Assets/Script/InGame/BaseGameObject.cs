@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using Player;
 using Enemy;
+using Col;
 
 namespace GameManager
 {
@@ -19,6 +21,15 @@ namespace GameManager
 
         [SerializeField, Header("エネミーの親オブジェクト")]
         private GameObject enemysParent;
+        [SerializeField,Header("PlayerのHpイメージ配列")]
+        private Image[] hpHeartImage = new Image[3];
+        public Image[] HpHeartImage{get{return hpHeartImage;}}
+        [SerializeField, Header("PlayerのHpイメージの枠")]
+        private Sprite hpHeartSprite;
+        public Sprite HpHeartSprite{get{return hpHeartSprite;}}
+        [SerializeField, Header("汚染ゲージスライダー")]
+        private Slider waterPollutionSlider;
+        public Slider WaterPollutionSlider{get{return waterPollutionSlider;}}
 
         // タスクキャンセル用
         public CancellationTokenSource Cts = new CancellationTokenSource();
@@ -85,7 +96,7 @@ namespace GameManager
             if(tmpEnemy == null)
             {
                 // 生成
-                tmpEnemy = new BaseEnemy(enemysParent);
+                tmpEnemy = new BaseEnemy(enemysParent, this);
             }
 
             // リストの最後に格納
@@ -99,6 +110,10 @@ namespace GameManager
             {
                 return;
             }
+            // スケール変更
+            tmpEnemy.ScaleSet();
+            // 当たり判定クラス作成
+            tmpEnemy.EnemyCol = new ColComponent(tmpEnemy.EnemyObj.transform.localScale);
 
             // 非表示の場合表示
             if(!tmpEnemy.EnemyObj.activeSelf)
@@ -145,15 +160,16 @@ namespace GameManager
 
         // button処理関数================================================
         // ジャンプステートを立てる処理
-        public void PlayerJump()
+        public void PlayerSwim()
         {
             // ジャンプステートがたってなければ立てる
             if(Player.MoveState == 0 || (Player.MoveState & InGameConst.MOVE_STATE_JUMP) == 0)
             {
+                // フレームカウントをnullにする
+                Player.MoveStartFlame = null;
+                Player.MoveState &= ~InGameConst.MOVE_STATE_NO_GRAVITATION;
                 Player.MoveState |= InGameConst.MOVE_STATE_JUMP;
                 
-                // 掘る対象オブジェクトをnullにする
-                Player.DigEnemy = null;
             }
         }
         // 左横移動ステートを立てる処理
@@ -165,8 +181,8 @@ namespace GameManager
             {
                 // フレームカウントをnullにする
                 Player.MoveStartFlame = null;
-                // ジャンプステート以外を折る
-                Player.MoveState &= InGameConst.MOVE_STATE_JUMP;
+                // ジャンプステートと何かに乗っているステート以外を折る
+                Player.MoveState &= (InGameConst.MOVE_STATE_JUMP | InGameConst.MOVE_STATE_NO_GRAVITATION);
                 // 左移動ステートを立てる
                 Player.MoveState |= InGameConst.MOVE_STATE_LEFT_MOVE;       
             
@@ -184,8 +200,8 @@ namespace GameManager
             {
                 // フレームカウントをnullにする
                 Player.MoveStartFlame = null;
-                // ジャンプステート以外を折る
-                Player.MoveState &= InGameConst.MOVE_STATE_JUMP;
+                // ジャンプステートと何かに乗っているステート以外を折る
+                Player.MoveState &= (InGameConst.MOVE_STATE_JUMP | InGameConst.MOVE_STATE_NO_GRAVITATION);
                 // 右移動ステートを立てる
                 Player.MoveState |= InGameConst.MOVE_STATE_RIGHT_MOVE;
                 // 掘る対象オブジェクトをnullにする
@@ -197,9 +213,20 @@ namespace GameManager
         {
             // フレームカウントをnullにする
             Player.MoveStartFlame = null;
-            // 移動ステートを全て折り止まる挙動を開始させる
-            Player.MoveState &= InGameConst.MOVE_STATE_JUMP;
+            // ジャンプステートと何かに乗っているステート以外をを全て折り止まる挙動を開始させる
+            Player.MoveState &= (InGameConst.MOVE_STATE_JUMP | InGameConst.MOVE_STATE_NO_GRAVITATION);
             Player.MoveState |= InGameConst.MOVE_STATE_RESET;
+        }
+        // スイムボタンを離したときの処理
+        public void ResetSwim()
+        {
+            // フレームカウントをnullにする
+            Player.MoveStartFlame = null;
+
+            // ステートを折る
+            Player.MoveState &= ~InGameConst.MOVE_STATE_JUMP;
+            Player.MoveState |= InGameConst.MOVE_STATE_RESET_SWIM;
+
         }
         // Digボタン処理関数
         public void DigMove()

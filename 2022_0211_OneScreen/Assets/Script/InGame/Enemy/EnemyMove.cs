@@ -61,11 +61,15 @@ namespace Enemy
         private void stopMove(ref Vector3 pos)
         {
             
-            // 画面外下についたら削除
-            if(pos.y <= InGameConst.ENEMY_STOP_POS.y)
+            // 画面外下についたら止める
+            if((pos.y - enemy.EnemyCol.HalScale.y) <= InGameConst.ENEMY_STOP_POS.y && !enemy.WaterPollutionSliderValue)
             {
+                // フラグを立てる
+                enemy.WaterPollutionSliderValue = true;
                 // 落下を止める
                 enemy.MoveStop[0] = (true, "Down");
+                // スライダーのバリューをスケール値分増やす
+                enemy.GameObjectManager.WaterPollutionSlider.value += enemy.EnemyObj.transform.localScale.x;
             }
             // 画面外右端
             if(pos.x >= InGameConst.ENEMY_STOP_POS.x)

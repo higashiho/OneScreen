@@ -17,9 +17,13 @@ public class InGameConst : MonoBehaviour
     /// 座標最小値
     /// </summary>
     public static readonly Vector3 PLAYER_STOP_POS = new Vector3(12.5f, -6.7f, 0); 
-    public static readonly Vector3 ENEMY_STOP_POS = new Vector3(12.0f ,-6.5f, 0.0f);
+    public static readonly Vector3 ENEMY_STOP_POS = new Vector3(12.0f ,-7.2f, 0.0f);
 
     // プレイヤー用定数
+    /// <summary>
+    /// プレイヤーの重力scaleを減らす用
+    /// </summary>
+    public const float GRAVITATION_DIVISION_PLAYER = 2f;
     /// <summary>
     /// 右移動ステート
     /// </summary>
@@ -40,6 +44,27 @@ public class InGameConst : MonoBehaviour
     /// 掘る挙動ステート
     /// </summary>
     public const uint MOVE_STATE_DIG = 0x10;
+    /// <summary>
+    /// 重力を掛けないようにする
+    /// </summary>
+    public const uint MOVE_STATE_NO_GRAVITATION = 0x20;
+    /// <summary>
+    /// 泳ぎリセット挙動ステート
+    /// </summary>
+    public const uint MOVE_STATE_RESET_SWIM = 0x40;
+    /// <summary>
+    /// 接触判定カウント最大値
+    /// </summary>
+    public const uint MAX_TOUCH_COUNT = 20;
+    /// <summary>
+    /// y座標最大値
+    /// </summary>
+    public const float MAX_POS_Y = 7.0f;
+    /// <summary>
+    /// プレイヤーの座標が変わる値の変化スピード
+    /// </summary>
+    public const float PLAYER_MOVE_CHANGE_SPEED = 0.1f;
+
     // エネミー用定数
     /// <summary>
     /// エネミー生成速度
@@ -57,12 +82,14 @@ public class InGameConst : MonoBehaviour
     /// 地面が消されて落下を再開する時間
     /// </summary>
     public const int GRAVITY_RETUN = 2;
-
-    // プレイヤー用定数
     /// <summary>
-    /// プレイヤーの座標が変わる値の変化スピード
+    /// エネミースケール最大値
     /// </summary>
-    public const float PLAYER_MOVE_CHANGE_SPEED = 0.1f;
+    public const float MAX_ENEMY_SCALE = 2.0f;
+    /// <summary>
+    /// エネミースケール最小値
+    /// </summary>
+    public const float MIN_ENEMY_SCALE = 0.5f;
     
     // タスク用定数
     /// <summary>
